@@ -11,6 +11,7 @@ public class MovieCollectionManager extends JFrame {
     private JTextField titleField;
     private JComboBox<String> genreComboBox;
     private JLabel movieCountLabel;
+    private TableRowSorter<DefaultTableModel> sorter;
 
     public MovieCollectionManager() {
         movies = new ArrayList<>();
@@ -57,11 +58,19 @@ public class MovieCollectionManager extends JFrame {
         searchButton.setForeground(Color.WHITE);
         searchButton.addActionListener(e -> searchMovie(searchField.getText()));
 
+        JComboBox<String> sortBox = new JComboBox<>(new String[]{"Sort by Title (A-Z)", "Sort by Genre (A-Z)"});
+        sortBox.setFont(inputFont);
+        sortBox.addActionListener(e -> {
+            int selected = sortBox.getSelectedIndex();
+            sorter.setSortKeys(java.util.List.of(new RowSorter.SortKey(selected, SortOrder.ASCENDING)));
+        });
+
         inputPanel.add(titleField);
         inputPanel.add(genreComboBox);
         inputPanel.add(addButton);
         inputPanel.add(searchField);
         inputPanel.add(searchButton);
+        inputPanel.add(sortBox);
 
         topPanel.add(inputPanel, BorderLayout.SOUTH);
         add(topPanel, BorderLayout.NORTH);
@@ -77,7 +86,7 @@ public class MovieCollectionManager extends JFrame {
         movieTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 13));
         movieTable.getTableHeader().setBackground(new Color(200, 200, 255));
 
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        sorter = new TableRowSorter<>(tableModel);
         movieTable.setRowSorter(sorter);
 
         JScrollPane scrollPane = new JScrollPane(movieTable);
